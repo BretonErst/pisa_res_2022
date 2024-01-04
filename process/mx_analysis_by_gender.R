@@ -248,6 +248,7 @@ st_mx |>
 ggpubr::ggarrange(p2, p1,
                   nrow = 1)
 
+
 st_mx |> 
   filter(baseline == 1) |> 
   ggplot(aes(y = math_level)) +

@@ -148,7 +148,7 @@ ggbetweenstats(data = samp_01,
        Modelaje y visualización: Juan L. Bretón, PMP | @juanlbreton") +
   theme_breton()
 
-ggsave(filename = "figures/math01.jpg", device = "jpeg", dpi = "retina")
+ggsave(filename = "figures/type_math01.jpg", device = "jpeg", dpi = "retina")
 
 # interpretation of effect
 effectsize::interpret_rank_biserial(0.43)
@@ -183,7 +183,7 @@ plot_models(qt_10, qt_50, qt_90,
   theme(legend.position = "top")
 
 
-ggsave(filename = "figures/math02.jpg", device = "jpeg", dpi = "retina")
+ggsave(filename = "figures/type_math02.jpg", device = "jpeg", dpi = "retina")
 
 
 # comparison with number of books
@@ -232,7 +232,7 @@ plot_model(books_eff_qt,
        Modelaje y visualización: Juan L. Bretón, PMP | @juanlbreton") +
   theme_breton()
 
-ggsave(filename = "figures/math03.jpg", device = "jpeg", dpi = "retina")
+ggsave(filename = "figures/type_math03.jpg", device = "jpeg", dpi = "retina")
 
 
 # points increased by books
@@ -252,7 +252,7 @@ plot_model(books_eff_qt,
        Modelaje y visualización: Juan L. Bretón, PMP | @juanlbreton") +
   theme_breton()
 
-ggsave(filename = "figures/math04.jpg", device = "jpeg", dpi = "retina")
+ggsave(filename = "figures/type_math04.jpg", device = "jpeg", dpi = "retina")
 
 
 # model with interactions
@@ -290,7 +290,7 @@ books_eff_all |>
   theme(legend.position = "top")
 
 
-ggsave(filename = "figures/math05.jpg", 
+ggsave(filename = "figures/type_math05.jpg", 
        device = "jpeg", 
        dpi = "retina")
 
