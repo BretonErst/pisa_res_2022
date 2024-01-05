@@ -15,6 +15,7 @@ library(sjPlot)
 library(quantreg)
 library(emmeans)
 library(ggridges)
+library(patchwork)
 
 
 
@@ -103,7 +104,7 @@ st_mx |>
              alpha = 0.2) +
   geom_vline(data = gender_scores,
              aes(xintercept = math_score),
-             color = "grey45") +
+             color = "darkred") +
   facet_grid(rows = vars(gender)) +
   theme_breton() +
   theme(legend.position = "none") +
@@ -112,7 +113,9 @@ st_mx |>
   labs(title = "Histogramas por Género",
        subtitle = "Matemáticas en estudiantes mexicanos",
        y = NULL,
-       x = "Puntaje")
+       x = "Puntaje",
+       caption = "Fuente: OECD, 2022 PISA Results, México <br>
+       Modelaje y visualización: Juan L. Bretón, PMP | @juanlbreton")
 
 
 
@@ -137,7 +140,7 @@ ggbetweenstats(data = gender_sample,
                x = gender,
                y = pv1math,
                type = "nonparametric") +
-  labs(title = "El género tiene muy poca incidencia en el aprendizaje de las Matemáticas",
+  labs(title = "El género tiene incidencia en el aprendizaje de las Matemáticas",
        # subtitle = "Muestra de escuelas mexicanas",
        y = "Puntaje en Matemáticas",
        x = "Género",
@@ -178,7 +181,8 @@ res_gen <-
          cummu = cumsum(pct)) |> 
   ungroup()
 
-
+  
+# visualization
 res_gen |> 
   ggplot(aes(y = gender,
              weight = n,
@@ -192,8 +196,8 @@ res_gen |>
         axis.ticks.x = element_blank()) +
   facet_grid(rows = vars(gender), scales = "free_y") +
   scale_fill_manual(values = col_lev1) +
-  labs(title = "Distribución por Nivel de Desempeño en Matemáticas",
-       subtitle = "Por género de estudiantes de México",
+  labs(title = "Distribución de Estudiantes por Nivel de Desempeño en Matemáticas",
+       subtitle = "Estudiantes de México por género",
        y = NULL,
        x = "Proporción de estudiantes",
        fill = "Nivel PISA",
@@ -248,6 +252,7 @@ st_mx |>
 ggpubr::ggarrange(p2, p1,
                   nrow = 1)
 
+p2 | p1
 
 st_mx |> 
   filter(baseline == 1) |> 
