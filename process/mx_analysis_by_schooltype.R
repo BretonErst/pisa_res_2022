@@ -6,8 +6,6 @@
 
 
 
-
-
 # libraries
 library(tidyverse)
 library(styleBreton)
@@ -132,7 +130,8 @@ samp_01 |>
              color = "grey45",
              linewidth = 2.5,
              alpha = 0.4) +
-  facet_grid(rows = vars(type))
+  facet_grid(rows = vars(type)) +
+  theme_breton()
 
 
 # mann-whitney u test per type of school
@@ -140,7 +139,7 @@ ggbetweenstats(data = samp_01,
                x = type,
                y = pv1math,
                type = "nonparametric") +
-  labs(title = "El tipo de escuela incide en aprendizaje de Matemáticas",
+  labs(title = "El tipo de escuela incide en el aprendizaje de las Matemáticas",
        # subtitle = "Muestra de escuelas mexicanas",
        y = "Puntaje en Matemáticas",
        x = "Tipo de escuela",
@@ -198,6 +197,11 @@ books_eff_lm <-
 plot_model(books_eff_lm, 
            type = "pred", 
            terms = "books")
+
+books_eff_lm |> 
+  emmeans(~ books) |> 
+  as_tibble()
+
 
 # quantile regression
 books_eff_qt <- rq(pv1math ~ books, data = st_mx)
@@ -293,7 +297,6 @@ books_eff_all |>
 ggsave(filename = "figures/type_math05.jpg", 
        device = "jpeg", 
        dpi = "retina")
-
 
 
 
