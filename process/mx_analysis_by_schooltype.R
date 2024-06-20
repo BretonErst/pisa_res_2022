@@ -58,11 +58,18 @@ st_mx <-
                                         "2", "3", "4", 
                                         "5", "6")))
 
+write_rds(st_mx, "data/students_mx.rds")
 
 # table per type
 st_mx |> 
   (\(x) table(x$type))() |> 
   prop.table()
+
+# find percentage of students in math_level 2 or below
+st_mx |> 
+  filter(math_level %in% c("Below 1c", "1c", "1b", "1a")) |> 
+  nrow() / nrow(st_mx)
+
 
 
 # exploration
@@ -78,7 +85,7 @@ st_mx |>
   summarize(media_math = mean(pv1math, na.rm = TRUE))
 
 
-# visualization of math scores by gender
+# visualization of math scores by school type
 st_mx |> 
   ggplot(aes(x = type, y = pv1math, color = type, fill = type)) +
   geom_violin(color = "grey45", fill = "grey90",
@@ -89,7 +96,7 @@ st_mx |>
                fun = "mean",
                color = "darkred") +
   labs(title = "Muestra Mexicana",
-       y = "Score en Matemáticas",
+       y = "Puntaje en Matemáticas",
        x = "Tipo de Escuela",
        caption = "Fuente: OECD, 2022 PISA Results <br>
        Juan L. Bretón, PMP | @juanlbreton") +
@@ -161,20 +168,28 @@ st_mx |>
                       calc_ecdf = TRUE,
                       quantile_lines = TRUE, 
                       quantiles = c(0.1, 0.5, 0.9)) +
-  theme_breton()
+  labs(title = "El desempeño de los estudiantes se desfasa según el tipo de escuela",
+       subtitle = "Diferencias en el puntaje de Matemáticas por nivel de desempeño",
+       x = "Puntaje en Matemáticas",
+       y = "Tipo de escuela",
+       fill = "Cuantil") +
+  theme_breton() +
+  theme(legend.position = "top")
 
 # regression per type of school
 qt_10 <- rq(pv1math ~ type, data = st_mx, tau = 0.1)
 qt_50 <- rq(pv1math ~ type, data = st_mx, tau = 0.5)
 qt_90 <- rq(pv1math ~ type, data = st_mx, tau = 0.9)
 
-qt_50 |> emmeans(~ type, tau = .5)
+qt_50 |> 
+  emmeans(~ type)
+
 
 # comparison of models
 plot_models(qt_10, qt_50, qt_90,
             show.values = TRUE,
             m.labels = c("Cuantil 10", "Cuantil 50", "Cuantil 90"),
-            legend.title = "Model") +
+            legend.title = "Modelo") +
   labs(title = "La diferencia entre escuela pública y privada afecta más a estudiantes con desempeños medios",
        subtitle = "Diferencias en el puntaje de Matemáticas",
        y = "Diferencia de puntos con respecto a las escuelas privadas") +
@@ -192,7 +207,8 @@ st_mx |>
   plot_grid()
 
 books_eff_lm <- 
-  lm(pv1math ~ books, data = st_mx)
+  lm(pv1math ~ books, 
+     data = st_mx)
 
 plot_model(books_eff_lm, 
            type = "pred", 
@@ -204,7 +220,9 @@ books_eff_lm |>
 
 
 # quantile regression
-books_eff_qt <- rq(pv1math ~ books, data = st_mx)
+books_eff_qt <- 
+  rq(pv1math ~ books, 
+     data = st_mx)
 
 # marginals means of scores
 books_eff_qt |> 
@@ -229,7 +247,7 @@ plot_model(books_eff_qt,
            y = 420,
            color = "grey45") +
   labs(title = "Tener libros en el hogar aumenta el conocimiento y las habilidades matemáticas",
-       subtitle = "Estimación de puntaje",
+       subtitle = "Estimación de puntaje en razón de la presencia de libros",
        x = "Número de libros existentes en el hogar",
        y = "Puntaje en Matemáticas",
        caption = "Fuente: OECD, 2022 PISA Results, México <br>
